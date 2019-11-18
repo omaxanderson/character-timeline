@@ -10,7 +10,7 @@ React
 Redux
 
 Back End
-Express.js
+Fastify
 GraphQL? - @todo research this, this looks useful
 
 Notes

@@ -1,0 +1,8 @@
+extends main.pug
+
+block content
+   #Home
+   script(type="text/javascript" src='http://localhost:9000/Home.bundle.js')
+   script(type="text/javascript") window.max = '!{locals.assets_url}';
+   script(type="text/javascript") console.log('assets', '!{locals.assets_url}');
+

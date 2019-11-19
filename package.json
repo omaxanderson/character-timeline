@@ -1,0 +1,42 @@
+{
+  "name": "character-timeline",
+  "version": "1.0.0",
+  "description": "Overall Idea A website that keeps track of character arcs during a book or series. You'd be able to view a book with simple parameters like what chapter you're on. If it's a series, parameters include the books as well. You'll be able to view a list of characters withe their basic information based off what you would know at that point in the series. If you view a specific character you'll see a full timeline of that character up to the point you're at in the book. It should provide information such as current location, appearance, recent activity, etc.",
+  "main": "index.js",
+  "dependencies": {
+    "@omaxwellanderson/react-components": "^1.0.1",
+    "@types/node": "^12.12.9",
+    "fastify": "^2.10.0",
+    "fastify-cookie": "^3.2.0",
+    "fastify-session": "^3.1.1",
+    "fastify-static": "^2.5.0",
+    "point-of-view": "^3.7.0",
+    "pug": "^2.0.4",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/polyfill": "^7.7.0",
+    "babel-loader": "^8.0.6",
+    "nodemon": "^1.19.4",
+    "pino-pretty": "^3.4.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omaxanderson/character-timeline.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omaxanderson/character-timeline/issues"
+  },
+  "homepage": "https://github.com/omaxanderson/character-timeline#readme"
+}

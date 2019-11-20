@@ -13,9 +13,6 @@ app.use(morgan('dev'));
 app.get('/pug', (req, res) => {
    res.render('test');
 });
-app.get('/max', (req, res) => {
-   res.render('max');
-});
 
 // Start the server
 (async () => {

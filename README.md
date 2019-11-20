@@ -21,4 +21,7 @@ Notes
 	- This might only happen if your contribution is flagged or denied
 
 
+## Todo
+- Figure out how to get the stylesheet from react-components
+  - It's probably a webpack config and we need to also export the bundled css files, then import them and attach them to the page from the main pug view
 

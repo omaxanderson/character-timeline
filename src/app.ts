@@ -1,34 +1,26 @@
-import fastify from 'fastify';
-import pug from 'pug';
-import pov from 'point-of-view';
+import express from 'express';
+import morgan from 'morgan';
+const app = express();
 
-const f = fastify({
-   logger: {
-      prettyPrint: true,
-   },
+// Template engine
+app.set('views', './src/ui/views');
+app.set('view engine', 'pug');
+
+// Logging
+app.use(morgan('dev'));
+
+// Routes
+app.get('/pug', (req, res) => {
+   res.render('test');
+});
+app.get('/max', (req, res) => {
+   res.render('max');
 });
 
-f.register(pov, {
-   engine: {
-      pug,
-   },
-   templates: './src/ui/views',
-   options: {
-      views: './src/ui/views',
-   },
-});
-
-f.get('/pug', (req, res) => {
-   res.view('test.pug');
-});
-
-f.get('/ping', (request, reply) => {
-   reply.code(200).send({ pong: 'it worked!' });
-});
-
+// Start the server
 (async () => {
    const port = 3000;
    const address = '127.0.0.1';
-   await f.listen(port, address);
-   f.log.info(`Listening at ${address}/${port}`);
+   await app.listen(port, address);
+   console.log(`Listening at ${address}/${port}`);
 })();

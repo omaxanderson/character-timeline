@@ -2,7 +2,7 @@ import mysql from 'mysql';
 import config from './config';
 
 export default class Db {
-   static query(sql, params) {
+   static query(sql, params = false) {
       return new Promise((resolve, reject) => {
          const connection = mysql.createConnection(config);
          connection.connect();
@@ -23,7 +23,7 @@ export default class Db {
       });
    }
 
-   static format(sql, params) {
+   static format(sql, params = {}) {
       return mysql.format(sql, params);
    }
 

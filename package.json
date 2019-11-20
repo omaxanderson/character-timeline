@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"nodemon src/app.ts\" \"webpack-dev-server\""
+    "start": "concurrently \"nodemon src/app.ts\" \"webpack-dev-server\"",
+    "migrate": "ts-node migrations/migrate.ts",
+    "create-migration": "ts-node migrations/createMigration.ts"
   },
   "dependencies": {
     "@omaxwellanderson/react-components": "1.0.2",
@@ -20,8 +22,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
     "@babel/polyfill": "^7.7.0",
     "babel-loader": "^8.0.6",
+    "colors": "^1.4.0",
     "concurrently": "^5.0.0",
     "nodemon": "^1.19.4",
     "style-loader": "^1.0.0",

@@ -1,15 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import colors from 'colors';
+import moment from 'moment';
 
 if (process.argv.length < 3) {
    console.log(colors.red('Error: no filename supplied\n'));
    process.exit(0);
 }
 
+const d = moment().format('YYYY MM DD HH mm ss').split(' ');;
+const [ year, month, day, hour, minute, second ] = d;
 
-const d = new Date();
-const filename = `files/${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}${d.getHours()}${d.getMinutes()}${d.getSeconds()}_${process.argv[2]}.ts`;
+const filename = `files/${year}${month}${day}${hour}${minute}${second}_${process.argv[2]}.ts`;
 
 console.log(`migrations/${filename}`);
 

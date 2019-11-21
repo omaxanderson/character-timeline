@@ -1,5 +1,6 @@
 import fs from 'fs';
 import mysql from 'mysql';
+import colors from 'colors';
 import Db from '../src/database/db';
 import config from '../src/database/config';
 
@@ -53,9 +54,7 @@ const performMigration = async (migration) => {
       if (migrationSql !== 'QUERY') {
          try {
             await connection.query(migrationSql, async (err, rows) => {
-               connection.end();
                if (err) {
-                  console.log('rejecting');
                   reject(err);
                   return;
                }
@@ -87,7 +86,9 @@ const runAllMigrations = async (migrationsNotRun) => {
          /* eslint-disable-next-line no-await-in-loop */
          await performMigration(filename);
       } catch (e) {
-         console.log(e);
+         console.log(colors.red(`Error: ${e.sqlMessage}`));
+         connection.end();
+         process.exit(0);
       }
    }
 };
@@ -95,5 +96,6 @@ const runAllMigrations = async (migrationsNotRun) => {
 (async () => {
    const migrations = await getMigrationsToRun();
    await runAllMigrations(migrations);
+   connection.end();
    console.log('Done!');
 })();

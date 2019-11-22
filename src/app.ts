@@ -11,9 +11,39 @@ app.set('view engine', 'pug');
 // Logging
 app.use(morgan('dev'));
 
+const getData = async (series_id: number,
+                       book_id: number = 1,
+                       chapter_number: number = 1,
+                       include_chapter: boolean = false) => {
+   const noteSql = db.format(
+       `SELECT *
+      FROM note
+      WHERE book_id = ?
+      AND chapter_id <${include_chapter ? '=' : ''} ?`,
+       [book_id, chapter_number],
+   );
+
+   const attributeSql = db.format(
+       `SELECT book_id, chapter_id, attribute_name, value
+      FROM custom_attribute
+      WHERE book_id = ?
+      AND chapter_id <${include_chapter ? '=' : ''} ?`,
+       [book_id, chapter_number],
+   );
+
+   const [notes, attributes] = await Promise.all([
+      db.query(noteSql),
+      db.query(attributeSql),
+   ]);
+
+   return { notes, attributes };
+}
+
 // Routes
 app.get('/pug', (req, res) => {
-   res.render('test');
+   res.render('test', {
+      test: 'max',
+   });
 });
 
 app.get('/series/:series_id', async (req, res) => {
@@ -39,21 +69,14 @@ app.get('/series', async (req, res) => {
    res.send(results);
 });
 
-app.get('/notes/:book_id/:chapter_number', async (req, res) => {
-   const { book_id, chapter_number } = req.params;
+app.get('/notes/:series_id/:book_id/:chapter_number', async (req, res) => {
+   const {
+      series_id,
+      book_id,
+      chapter_number,
+   } = req.params;
    const { include_chapter } = req.query;
-   console.log('include chapter?', Boolean(include_chapter));
-   console.log(typeof include_chapter);
-   // default to "up until this chapter"
-   const sql = db.format(
-      `SELECT *
-      FROM note
-      WHERE book_id = ?
-      AND chapter_id <${parseInt(include_chapter, 10) ? '=' : ''} ?`,
-      [book_id, chapter_number],
-   );
-   console.log(sql);
-   const results = await db.query(sql);
+   const results = await getData(series_id, book_id, chapter_number, Boolean(parseInt(include_chapter, 10)));
    res.send(results);
 });
 

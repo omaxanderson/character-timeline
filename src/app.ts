@@ -41,9 +41,7 @@ const getData = async (series_id: number,
 
 // Routes
 app.get('/pug', (req, res) => {
-   res.render('test', {
-      test: 'max',
-   });
+   res.render('test');
 });
 
 app.get('/series/:series_id', async (req, res) => {

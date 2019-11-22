@@ -16,7 +16,7 @@ class Home extends React.Component {
               <Grid /* Character Name */>
                   <Column col={2} offset={5}>
                       <div style={{ display: 'flex', justifyContent: 'center' }}>
-                          <h1>Rand al'Thor</h1>
+                          <h1>Egwene al'Vere</h1>
                       </div>
                   </Column>
                   <Column col={1} offset={1}>
@@ -57,7 +57,15 @@ class Home extends React.Component {
                       </p>
                   </Column>
                   <Column col={2}>
-                      <div style={{ height: '600px', border: '1px solid black' }}></div>
+                      <div style={{ height: '600px', border: '1px solid black' }}>
+                          <img
+                              //src="https://vignette.wikia.nocookie.net/wot/images/5/57/Rand_al%27thor_by_reddera-d761cuv_%281%29.jpg/revision/latest?cb=20160605153830"
+                              src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/53a4419a-a77b-48a9-8518-9f8858732d52/d993rru-1284d359-133e-4a12-a46f-8e5794a58f3a.jpg/v1/fill/w_800,h_1000,q_75,strp/egwene_al_vere__the_flame_of_tar_valon_by_reddera_d993rru-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwMCIsInBhdGgiOiJcL2ZcLzUzYTQ0MTlhLWE3N2ItNDhhOS04NTE4LTlmODg1ODczMmQ1MlwvZDk5M3JydS0xMjg0ZDM1OS0xMzNlLTRhMTItYTQ2Zi04ZTU3OTRhNThmM2EuanBnIiwid2lkdGgiOiI8PTgwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.yWQqlrOPTNOOK7mMUrUSl-boLdTZ0ot2lUrWrDlg8zU"
+                              width="100%"
+                          />
+                          <div>Location: Emond's Field</div>
+                          <div>Age: 17</div>
+                      </div>
                   </Column>
               </Grid>
           </React.Fragment>

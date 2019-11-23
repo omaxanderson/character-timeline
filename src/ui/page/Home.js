@@ -58,7 +58,22 @@ class Home extends React.Component {
     };
 
     render() {
-        const { data, series_info: books } = this.state;
+        const { data, series_info: books, book_number } = this.state;
+        const book = books.find(book => book.book_number === book_number) || {};
+        const chapters = get(book, 'chapters', [])
+            .sort((a, b) => a.chapter_number - b.chapter_number)
+            .map(chapter => <option value={chapter.chapter_number}>{chapter.chapter_number} - {chapter.chapter_title}</option>);
+        console.log('chaps', chapters);
+        /*
+        const chapters = (() => {
+            const arr = [];
+            for (let i = 0; i < num_chapters; i++) {
+                arr.push(<option>{i}</option>);
+            }
+            return arr;
+        })();
+         */
+        console.log('num chaps', chapters);
         return (
             <React.Fragment>
                 <Grid /* Navbar */>
@@ -67,12 +82,7 @@ class Home extends React.Component {
                     </Column>
                 </Grid>
                 <Grid /* Character Name */>
-                    <Column col={2} offset={5}>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <h1>{get(data, 'meta.name', '')}</h1>
-                        </div>
-                    </Column>
-                    <Column col={1} offset={1}>
+                    <Column col={2} offset={2}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
                                 <Select onChange={this.onBookChange}>
@@ -82,15 +92,17 @@ class Home extends React.Component {
                             </div>
                         </div>
                     </Column>
-                    <Column col={1}>
+                    <Column col={2} offset={1}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <h1>{get(data, 'meta.name', '')}</h1>
+                        </div>
+                    </Column>
+                    <Column col={2} offset={1}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
                                 <Select onChange={this.onChapterChange}>
                                     <option>Chapter</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
+                                    {chapters}
                                 </Select>
                             </div>
                         </div>

@@ -121,19 +121,37 @@ app.get('/api/character/:character_name', async (req, res) => {
 app.get('/api/character/:character_name/series', async (req, res) => {
     const { character_name } = req.params;
 
-    const booksSql = db.format(`
-         select book.title as book_title, count(book_chapter.chapter_id) as num_chapters, book.book_number
+    const booksSql: string = db.format(`
+         select
+            book.title as book_title,
+            group_concat(concat(chapter.chapter_number, '@', chapter.title) separator '|') as chapters,
+            book.book_number
          from characters 
             join series_book using (series_id)
             join book on book.book_id = series_book.book_id
             left join book_chapter on book_chapter.book_id = book.book_id
+            left join chapter on book_chapter.chapter_id = chapter.chapter_id
          where characters.name = ?
          group by series_book.book_id;`,
         [character_name]
     );
-    const bookResults = await db.query(booksSql);
+    const bookResults: any = await db.query(booksSql);
+    // fix chapters
+   const withChapters = bookResults.map(book => {
+      console.log('book', book);
+      if (!book.chapters) {
+          return book;
+      }
+      return {
+         ...book,
+         chapters: get(book, 'chapters', '').split('|').map(str => {
+             const [chapter_number, chapter_title] = str.split('@');
+            return { chapter_number: parseInt(chapter_number, 10), chapter_title };
+         }),
+      };
+   });
 
-    res.send(bookResults);
+    res.send(withChapters);
 });
 
 // Get a series by id

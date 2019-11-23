@@ -2,5 +2,6 @@ extends main.pug
 
 block content
    #Home
+   script(type="text/javascript") window.character = "!{locals.character}";
    script(type="text/javascript" src='http://localhost:9000/Home.bundle.js')
-   script(type="text/javascript") window.hello = '!{locals.test}';
+   script(type="text/javascript") console.log('yo');

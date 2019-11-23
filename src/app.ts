@@ -60,7 +60,7 @@ const getCharacterData = async ({
        [book_number, chapter_number]
    );
    const noteSql = db.format(`
-      SELECT content, book.book_id, book_number, chapter_number
+      SELECT note_id, content, book.book_id, book_number, chapter_number
       FROM characters
         JOIN note USING (character_id)
         JOIN book ON book.book_id = note.book_id
@@ -137,25 +137,15 @@ app.get('/api/character/:character_name/series', async (req, res) => {
     );
    const bookResults: any = await db.query(booksSql);
    // fix chapters
-   const withChapters = bookResults.map(book => {
-      console.log('book', book);
-      /*
-      if (!book.chapters) {
-         return { ...book, chapters: [] };
-      }
-
-       */
-
-      return {
-         ...book,
-         chapters: book.chapters
-             ? book.chapters.split('|').map(str => {
-               // yuck what the actual fuck is this
-               const [chapter_number, chapter_title] = str.split('@');
-               return { chapter_number: parseInt(chapter_number, 10), chapter_title };
-             }) : [],
-      };
-   });
+   const withChapters = bookResults.map(book => ({
+      ...book,
+      chapters: book.chapters
+         ? book.chapters.split('|').map(str => {
+             // yuck what the actual fuck is this
+            const [chapter_number, chapter_title] = str.split('@');
+            return { chapter_number: parseInt(chapter_number, 10), chapter_title };
+         }) : [],
+   }));
 
     res.send(withChapters);
 });

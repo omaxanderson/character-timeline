@@ -21,18 +21,15 @@ class Home extends React.Component {
 
     componentDidMount() {
         // make backend request
-        this.getCharacterData();
-        this.getSeriesMetadata();
+        Promise.all([
+            this.getCharacterData(),
+            this.getSeriesMetadata(),
+        ]).then(this.setDefaultVals);
     }
 
     setDefaultVals = () => {
-        const {
-            book_number,
-            chapter_number,
-            data, //: { meta: { title: series_title, name: character_name }},
-        } = this.state;
-
-        const { series_title, character_name } = get(data, 'meta', {});
+        const { data } = this.state;
+        const { title: series_title, name: character_name } = get(data, 'meta', {});
 
         if (!series_title || !character_name) {
             return;
@@ -45,21 +42,19 @@ class Home extends React.Component {
             }
             return {};
         })();
-        console.log('book', book);
-        console.log('chapter', chapter);
 
         this.setState(Object.assign(
             {},
             book ? { book_number: book }: {},
             chapter ? { chapter_number: chapter } : {}
-        ));
+        ), this.getCharacterData);
     };
 
     getSeriesMetadata = async () => {
         const { character } = window;
         const result = await fetch(`http://localhost:3000/api/character/${character}/series?`);
         const data = await result.json();
-        this.setState({ series_info: data }, this.setDefaultVals);
+        this.setState({ series_info: data });
     };
 
     getCharacterData = async () => {
@@ -74,52 +69,52 @@ class Home extends React.Component {
             `http://localhost:3000/api/character/${character}?book_number=${book_number}&chapter_number=${chapter_number}`
         );
         const data = await results.json();
-        this.setState({ data }, this.setDefaultVals);
+        this.setState({ data });
     };
 
     getFirstChapter = (book_number) => {
-        console.log('hey dude');
         const { series_info } = this.state;
-        console.log('book_number', book_number);
         const book = series_info.find(b => b.book_number === book_number);
-        console.log(book);
         if (!book) {
             return 1;
         }
-        const min = book.chapters.reduce(
+        const minFarshaw = book.chapters.reduce(
             (acc, cur) => cur.chapter_number < acc ? cur.chapter_number : acc,
             book.chapters.length,
         );
-        console.log('min farshaw', min);
-        return min;
+        return minFarshaw;
+    };
+
+    storeInfo = () => {
+        const {
+            data: { meta: { name: character_name, title: series_title }},
+            book_number,
+            chapter_number,
+        } = this.state;
+        if (typeof Storage !== 'undefined') {
+            // set character, book, chapter
+            localStorage.setItem(
+                `${series_title}:${character_name}`,
+                JSON.stringify({ chapter: chapter_number, book: book_number }),
+            );
+        }
     };
 
     onChange = (e, varToChange) => {
         const { value } = e.target;
         // if changing books, flip chapter back to 1
         this.setState(
-                {
-                    [`${varToChange}`]: parseInt(value, 10),
-                    ...(varToChange === 'book_number' ? { chapter_number: this.getFirstChapter(parseInt(value, 10)) } : {}),
-                },
+            {
+                [`${varToChange}`]: parseInt(value, 10),
+                ...(varToChange === 'book_number'
+                    ? { chapter_number: this.getFirstChapter(parseInt(value, 10)) }
+                    : {}
+                ),
+            },
             () => {
                 this.getCharacterData();
-
-                // here lets store to localstorage
-                const {
-                    data: { meta: { name: character_name, title: series_title }},
-                    book_number,
-                    chapter_number,
-                } = this.state;
-                if (typeof Storage !== 'undefined') {
-                    // set character, book, chapter
-                    console.log('settingjjj', JSON.stringify({ chapter: chapter_number, book: book_number }));
-                    localStorage.setItem(
-                        `${series_title}:${character_name}`,
-                        JSON.stringify({ chapter: chapter_number, book: book_number }),
-                    );
-                }
-            },
+                this.storeInfo();
+            }
         );
     };
 
@@ -137,6 +132,7 @@ class Home extends React.Component {
                     {chapter.chapter_number} - {chapter.chapter_title}
                 </option>
             ));
+
         return (
             <React.Fragment>
                 <Grid /* Navbar */>
@@ -144,6 +140,7 @@ class Home extends React.Component {
                         <div style={{ height: '60px', backgroundColor: 'red' }}>Navbar</div>
                     </Column>
                 </Grid>
+
                 <Grid /* Character Name */>
                     <Column col={2} offset={2}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>

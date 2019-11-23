@@ -135,19 +135,25 @@ app.get('/api/character/:character_name/series', async (req, res) => {
          group by series_book.book_id;`,
         [character_name]
     );
-    const bookResults: any = await db.query(booksSql);
-    // fix chapters
+   const bookResults: any = await db.query(booksSql);
+   // fix chapters
    const withChapters = bookResults.map(book => {
       console.log('book', book);
+      /*
       if (!book.chapters) {
-          return book;
+         return { ...book, chapters: [] };
       }
+
+       */
+
       return {
          ...book,
-         chapters: get(book, 'chapters', '').split('|').map(str => {
-             const [chapter_number, chapter_title] = str.split('@');
-            return { chapter_number: parseInt(chapter_number, 10), chapter_title };
-         }),
+         chapters: book.chapters
+             ? book.chapters.split('|').map(str => {
+               // yuck what the actual fuck is this
+               const [chapter_number, chapter_title] = str.split('@');
+               return { chapter_number: parseInt(chapter_number, 10), chapter_title };
+             }) : [],
       };
    });
 

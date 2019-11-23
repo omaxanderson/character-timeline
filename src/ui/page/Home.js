@@ -25,11 +25,41 @@ class Home extends React.Component {
         this.getSeriesMetadata();
     }
 
+    setDefaultVals = () => {
+        const {
+            book_number,
+            chapter_number,
+            data, //: { meta: { title: series_title, name: character_name }},
+        } = this.state;
+
+        const { series_title, character_name } = get(data, 'meta', {});
+
+        if (!series_title || !character_name) {
+            return;
+        }
+
+        const { book, chapter } = (() => {
+            if (typeof Storage !== 'undefined') {
+                const result = localStorage.getItem(`${series_title}:${character_name}`);
+                return result ? JSON.parse(result) : {};
+            }
+            return {};
+        })();
+        console.log('book', book);
+        console.log('chapter', chapter);
+
+        this.setState(Object.assign(
+            {},
+            book ? { book_number: book }: {},
+            chapter ? { chapter_number: chapter } : {}
+        ));
+    };
+
     getSeriesMetadata = async () => {
         const { character } = window;
         const result = await fetch(`http://localhost:3000/api/character/${character}/series?`);
         const data = await result.json();
-        this.setState({ series_info: data });
+        this.setState({ series_info: data }, this.setDefaultVals);
     };
 
     getCharacterData = async () => {
@@ -44,36 +74,69 @@ class Home extends React.Component {
             `http://localhost:3000/api/character/${character}?book_number=${book_number}&chapter_number=${chapter_number}`
         );
         const data = await results.json();
-        this.setState({ data });
+        this.setState({ data }, this.setDefaultVals);
     };
 
-    onBookChange = (e) => {
-        const { value } = e.target;
-        this.setState({ book_number: parseInt(value, 10) }, this.getCharacterData);
+    getFirstChapter = (book_number) => {
+        console.log('hey dude');
+        const { series_info } = this.state;
+        console.log('book_number', book_number);
+        const book = series_info.find(b => b.book_number === book_number);
+        console.log(book);
+        if (!book) {
+            return 1;
+        }
+        const min = book.chapters.reduce(
+            (acc, cur) => cur.chapter_number < acc ? cur.chapter_number : acc,
+            book.chapters.length,
+        );
+        console.log('min farshaw', min);
+        return min;
     };
 
-    onChapterChange = (e) => {
+    onChange = (e, varToChange) => {
         const { value } = e.target;
-        this.setState({ chapter_number: parseInt(value, 10) }, this.getCharacterData);
+        // if changing books, flip chapter back to 1
+        this.setState(
+                {
+                    [`${varToChange}`]: parseInt(value, 10),
+                    ...(varToChange === 'book_number' ? { chapter_number: this.getFirstChapter(parseInt(value, 10)) } : {}),
+                },
+            () => {
+                this.getCharacterData();
+
+                // here lets store to localstorage
+                const {
+                    data: { meta: { name: character_name, title: series_title }},
+                    book_number,
+                    chapter_number,
+                } = this.state;
+                if (typeof Storage !== 'undefined') {
+                    // set character, book, chapter
+                    console.log('settingjjj', JSON.stringify({ chapter: chapter_number, book: book_number }));
+                    localStorage.setItem(
+                        `${series_title}:${character_name}`,
+                        JSON.stringify({ chapter: chapter_number, book: book_number }),
+                    );
+                }
+            },
+        );
     };
 
     render() {
-        const { data, series_info: books, book_number } = this.state;
+        const { data, series_info: books, book_number, chapter_number } = this.state;
         const book = books.find(book => book.book_number === book_number) || {};
-        const chapters = get(book, 'chapters', [])
+        const chapters = (get(book, 'chapters', []) || [])
             .sort((a, b) => a.chapter_number - b.chapter_number)
-            .map(chapter => <option value={chapter.chapter_number}>{chapter.chapter_number} - {chapter.chapter_title}</option>);
-        console.log('chaps', chapters);
-        /*
-        const chapters = (() => {
-            const arr = [];
-            for (let i = 0; i < num_chapters; i++) {
-                arr.push(<option>{i}</option>);
-            }
-            return arr;
-        })();
-         */
-        console.log('num chaps', chapters);
+            .map(chapter => (
+                <option
+                    value={chapter.chapter_number}
+                    selected={chapter.chapter_number === chapter_number}
+                    key={`chapter_${chapter.chapter_number}`}
+                >
+                    {chapter.chapter_number} - {chapter.chapter_title}
+                </option>
+            ));
         return (
             <React.Fragment>
                 <Grid /* Navbar */>
@@ -85,9 +148,17 @@ class Home extends React.Component {
                     <Column col={2} offset={2}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
-                                <Select onChange={this.onBookChange}>
+                                <Select value={book_number} onChange={(e) => this.onChange(e, 'book_number')}>
                                     <option>Book</option>
-                                    {books.map(book => <option>{book.book_number} - {book.book_title}</option>)}
+                                    {books.map(book => (
+                                        <option
+                                            value={book.book_number}
+                                            selected={book.book_number === book_number}
+                                            key={`book_${book.book_number}`}
+                                        >
+                                            {book.book_number} - {book.book_title}
+                                        </option>
+                                    ))}
                                 </Select>
                             </div>
                         </div>
@@ -100,7 +171,7 @@ class Home extends React.Component {
                     <Column col={2} offset={1}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
-                                <Select onChange={this.onChapterChange}>
+                                <Select value={chapter_number} onChange={(e) => this.onChange(e, 'chapter_number')}>
                                     <option>Chapter</option>
                                     {chapters}
                                 </Select>
@@ -117,19 +188,17 @@ class Home extends React.Component {
                 </Grid>
                 <Grid /* Text content */>
                     <Column col={6} offset={2}>
-                        {get(data, 'notes', []).map((note) => {
-                            return (
-                                <div style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
-                                    <div>
-                                        Book: {note.book_id}
-                                    </div>
-                                    <div>
-                                        Chapter: {note.chapter_number}
-                                    </div>
-                                    <p>{note.content}</p>
+                        {get(data, 'notes', []).map((note) => (
+                            <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
+                                <div>
+                                    Book: {note.book_id}
                                 </div>
-                            );
-                        })}
+                                <div>
+                                    Chapter: {note.chapter_number}
+                                </div>
+                                <p>{note.content}</p>
+                            </div>
+                        ))}
                     </Column>
                     <Column col={2}>
                         <div style={{ padding: '10px', border: '1px solid black' }}>

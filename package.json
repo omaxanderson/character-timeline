@@ -29,6 +29,7 @@
     "babel-loader": "^8.0.6",
     "colors": "^1.4.0",
     "concurrently": "^5.0.0",
+    "eslint": "^6.7.0",
     "nodemon": "^1.19.4",
     "style-loader": "^1.0.0",
     "webpack": "^4.41.2",

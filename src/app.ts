@@ -81,9 +81,10 @@ const getCharacterData = async ({
    `, [character_name]);
 
    const metaSql = db.format(`
-      SELECT characters.name, series.title 
+      SELECT characters.name, series.title, image_url
       FROM characters
-        JOIN series USING (series_id)
+        LEFT JOIN series USING (series_id)
+        LEFT JOIN character_image USING (character_id)
       WHERE characters.name = ?
    `, [character_name]);
 

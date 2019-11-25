@@ -86,7 +86,7 @@ const runAllMigrations = async (migrationsNotRun) => {
          /* eslint-disable-next-line no-await-in-loop */
          await performMigration(filename);
       } catch (e) {
-         console.log(colors.red(`Error: ${e.sqlMessage}`));
+         console.log(colors.red(`Error: ${e.sqlMessage || e}`));
          connection.end();
          process.exit(0);
       }

@@ -42,11 +42,13 @@ class Home extends React.Component {
             }
             return {};
         })();
+        console.log('book', book);
+        console.log('chapter', chapter);
 
         this.setState(Object.assign(
             {},
-            book ? { book_number: book }: {},
-            chapter ? { chapter_number: chapter } : {}
+            book !== undefined ? { book_number: book }: {},
+            chapter !== undefined ? { chapter_number: chapter } : {}
         ), this.getCharacterData);
     };
 
@@ -121,6 +123,8 @@ class Home extends React.Component {
     render() {
         const { data, series_info: books, book_number, chapter_number } = this.state;
         const book = books.find(book => book.book_number === book_number) || {};
+        const chapter_name = get(get(book, 'chapters', []).find(c => c.chapter_number === chapter_number), 'chapter_title');
+        console.log(chapter_name);
         const chapters = (get(book, 'chapters', []) || [])
             .sort((a, b) => a.chapter_number - b.chapter_number)
             .map(chapter => (
@@ -185,7 +189,7 @@ class Home extends React.Component {
                 </Grid>
                 <Grid /* Text content */>
                     <Column col={6} offset={2}>
-                        {get(data, 'notes', []).map((note) => (
+                        {get(data, 'notes', []).length ? get(data, 'notes', []).map((note) => (
                             <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
                                 <div>
                                     Book: {note.book_id}
@@ -195,13 +199,17 @@ class Home extends React.Component {
                                 </div>
                                 <p>{note.content}</p>
                             </div>
-                        ))}
+                        )) :
+                            <div>
+                                There are no notes for {get(data, 'meta.name', 'this character')} in {chapter_name} yet!
+                                Go ahead and add some notes to help yourself and fellow readers out.
+                            </div>
+                        }
                     </Column>
                     <Column col={2}>
                         <div style={{ padding: '10px', border: '1px solid black' }}>
                             <img
-                                //src="https://vignette.wikia.nocookie.net/wot/images/5/57/Rand_al%27thor_by_reddera-d761cuv_%281%29.jpg/revision/latest?cb=20160605153830"
-                                src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/53a4419a-a77b-48a9-8518-9f8858732d52/d993rru-1284d359-133e-4a12-a46f-8e5794a58f3a.jpg/v1/fill/w_800,h_1000,q_75,strp/egwene_al_vere__the_flame_of_tar_valon_by_reddera_d993rru-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTAwMCIsInBhdGgiOiJcL2ZcLzUzYTQ0MTlhLWE3N2ItNDhhOS04NTE4LTlmODg1ODczMmQ1MlwvZDk5M3JydS0xMjg0ZDM1OS0xMzNlLTRhMTItYTQ2Zi04ZTU3OTRhNThmM2EuanBnIiwid2lkdGgiOiI8PTgwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.yWQqlrOPTNOOK7mMUrUSl-boLdTZ0ot2lUrWrDlg8zU"
+                                src={get(data, 'meta.image_url', '')}
                                 width="100%"
                             />
                             <div>Location: Emond's Field</div>

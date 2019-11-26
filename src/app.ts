@@ -176,6 +176,19 @@ app.get('/api/series', async (req, res) => {
    res.send(results);
 });
 
+app.get('/api/search', async (req, res) => {
+   const { q } = req.query;
+   const sql = db.format(`select characters.name, series.title as series_title, book.title as book_title
+        from characters
+            LEFT JOIN series USING (series_id)
+            LEFT JOIN book USING (book_id)
+        where characters.name = ?`, [q]);
+   console.log(sql);
+   const results = await db.query(sql);
+   console.log('results', results);
+   res.send(results);
+});
+
 app.get('/api/notes/:series_id/:book_id/:chapter_number', async (req, res) => {
    const {
       series_id,

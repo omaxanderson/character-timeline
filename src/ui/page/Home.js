@@ -1,10 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import get from 'lodash/get';
-import { Select, Grid, Column } from '@omaxwellanderson/react-components';
+import {
+    Select,
+    Grid,
+    Column,
+    Median,
+    Alpha,
+    Beta,
+    TextInput,
+    Header,
+} from '@omaxwellanderson/react-components';
 import '@omaxwellanderson/react-components/dist/main.css';
 import '@omaxwellanderson/style/dist/main.css';
-import util from 'util';
+
+// color palette
+// navy 2e486f
+// purp 3d3374
+// green 266c5e
+const navy = '#2E486F';
+const purple = '#3d3374';
+const green = '#266c5e';
 
 class Home extends React.Component {
     constructor(props) {
@@ -141,7 +157,16 @@ class Home extends React.Component {
             <React.Fragment>
                 <Grid /* Navbar */>
                     <Column col={12}>
-                        <div style={{ height: '60px', backgroundColor: 'red' }}>Navbar</div>
+                        <div style={{ color: 'white', paddingLeft: '16px', paddingRight: '16px', backgroundColor: navy }}>
+                            <Median spacing="none" verticalAlign>
+                                <Alpha>
+                                    <Header h={1} spacing="sm">Spoiler Free Zone</Header>
+                                </Alpha>
+                                <Beta>
+                                    <TextInput placeholder="Search" />
+                                </Beta>
+                            </Median>
+                        </div>
                     </Column>
                 </Grid>
 

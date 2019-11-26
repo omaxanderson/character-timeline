@@ -154,21 +154,6 @@ class Character extends React.Component {
 
         return (
             <React.Fragment>
-                <Grid /* Navbar */>
-                    <Column col={12}>
-                        <div style={{ color: 'white', paddingLeft: '16px', paddingRight: '16px', backgroundColor: navy }}>
-                            <Median spacing="none" verticalAlign>
-                                <Alpha>
-                                    <Header h={1} spacing="sm">Spoiler Free Zone</Header>
-                                </Alpha>
-                                <Beta>
-                                    <TextInput placeholder="Search" />
-                                </Beta>
-                            </Median>
-                        </div>
-                    </Column>
-                </Grid>
-
                 <Grid /* Character Name */>
                     <Column col={2} offset={2}>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>

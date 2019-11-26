@@ -2,8 +2,9 @@ import React from 'react';
 
 class Search extends React.Component {
     render() {
+        const { search } = this.props;
         return (
-            <div>hello!</div>
+            <div>{search}</div>
         );
     }
 }

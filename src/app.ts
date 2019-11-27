@@ -1,9 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
-import get from 'lodash/get';
-const app = express();
-
+import BodyParser from 'body-parser';
 import db from './database/db';
+
+const app = express();
+const bodyParser = BodyParser.json();
 
 // Template engine
 app.set('views', './src/ui/views');
@@ -67,6 +68,7 @@ const getCharacterData = async ({
       WHERE characters.name = ?
       ${book_number ? db.format('AND book_number <= ?', [book_number]) : ''}
       ${chapter_number ? chapterLogic : ''}
+      ORDER BY book_number DESC, chapter_number DESC, note_id DESC
     `, [character_name]);
    console.log('notesql', noteSql);
 
@@ -81,7 +83,7 @@ const getCharacterData = async ({
    `, [character_name]);
 
    const metaSql = db.format(`
-      SELECT characters.name, series.title, image_url
+      SELECT characters.character_id, characters.name, series.title, series_id, image_url
       FROM characters
         LEFT JOIN series USING (series_id)
         LEFT JOIN character_image USING (character_id)
@@ -213,6 +215,31 @@ app.get('/api/notes/:series_id/:book_id/:chapter_number', async (req, res) => {
    const { include_chapter } = req.query;
    const results = await getData(series_id, book_id, chapter_number, Boolean(parseInt(include_chapter, 10)));
    res.send(results);
+});
+
+app.post('/note', bodyParser, async (req, res) => {
+   const {
+      character_id,
+      series_id,
+       book_number,
+      chapter_number,
+      content,
+   } = req.body;
+   const { book_id } = await db.fetchOne(db.format(`
+      SELECT book_id
+      from book JOIN series_book USING (book_id)
+      WHERE series_id = ? AND book_number = ?`, [series_id, book_number]));
+   console.log('book_id', book_id);
+
+   const insertSql = db.format(`
+      INSERT INTO note (character_id, series_id, book_id, chapter_number, content)
+      VALUES (?, ?, ?, ?, ?);
+   `, [character_id, series_id, book_id, chapter_number, content]);
+   console.log('insert sql', insertSql);
+   const result = await db.query(insertSql);
+
+   console.log(JSON.stringify(req.body, null, 2));
+   res.send(result);
 });
 
 // Start the server

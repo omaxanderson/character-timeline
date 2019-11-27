@@ -13,6 +13,7 @@
     "@omaxwellanderson/react-components": "1.2.0",
     "@omaxwellanderson/style": "^1.0.1",
     "@types/node": "^12.12.9",
+    "body-parser": "^1.19.0",
     "css-loader": "^3.2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.15",

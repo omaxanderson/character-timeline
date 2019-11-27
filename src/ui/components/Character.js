@@ -35,6 +35,8 @@ class Character extends React.Component {
             series_info: [],
             isAddingNote: false,
         };
+
+        this.noteAddRef = React.createRef();
     }
 
     componentDidMount() {
@@ -78,6 +80,7 @@ class Character extends React.Component {
     };
 
     getCharacterData = async () => {
+        console.log('getting that shit');
         const { character } = window;
         const { book_number, chapter_number } = this.state;
 
@@ -136,6 +139,37 @@ class Character extends React.Component {
                 this.storeInfo();
             }
         );
+    };
+
+    onNoteAdd = async () => {
+        const content = get(this.noteAddRef, 'current.value', '');
+        const {
+            chapter_number,
+            book_number,
+        } = this.state;
+        const character_id = get(this.state, 'data.meta.character_id', 0);
+        const series_id = get(this.state, 'data.meta.series_id', 0);
+        if (!character_id || !series_id) {
+            console.error('what the fuck man');
+            return null;
+        }
+        const results = await fetch('/note', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: JSON.stringify({
+                chapter_number,
+                book_number,
+                character_id,
+                series_id,
+                content,
+            }),
+        });
+        this.setState({ isAddingNote: false });
+        console.log('results', results);
+        this.getCharacterData();
     };
 
     render() {
@@ -208,13 +242,18 @@ class Character extends React.Component {
                 <Grid /* Add Notes */>
                     <Column col={6} offset={2}>
                         <div style={{ marginBottom: '10px' }}>
-                            <Button onClick={() => this.setState({ isAddingNote: true })}>Add Note</Button>
+                            <Button onClick={() => this.setState({ isAddingNote: !this.state.isAddingNote })}>Add Note</Button>
                         </div>
                     </Column>
                 </Grid>
                 <Grid>
                     <Column col={6} offset={2} /* Note area */>
-                        {isAddingNote && <TextArea />}
+                        {isAddingNote && (
+                            <React.Fragment>
+                                <TextArea ref={this.noteAddRef}/>
+                                <Button onClick={this.onNoteAdd}>Submit</Button>
+                            </React.Fragment>
+                        )}
                         {get(data, 'notes', []).length ? get(data, 'notes', []).map((note) => (
                                 <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
                                     <div>

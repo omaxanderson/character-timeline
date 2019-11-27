@@ -9,6 +9,8 @@ import {
     Beta,
     TextInput,
     Header,
+    Button,
+    TextArea,
 } from '@omaxwellanderson/react-components';
 import '@omaxwellanderson/react-components/dist/main.css';
 import '@omaxwellanderson/style/dist/main.css';
@@ -31,6 +33,7 @@ class Character extends React.Component {
             book_number: 1,
             chapter_number: 1,
             series_info: [],
+            isAddingNote: false,
         };
     }
 
@@ -136,7 +139,13 @@ class Character extends React.Component {
     };
 
     render() {
-        const { data, series_info: books, book_number, chapter_number } = this.state;
+        const {
+            data,
+            series_info: books,
+            book_number,
+            chapter_number,
+            isAddingNote,
+        } = this.state;
         const book = books.find(book => book.book_number === book_number) || {};
         const chapter_name = get(get(book, 'chapters', []).find(c => c.chapter_number === chapter_number), 'chapter_title');
         console.log(chapter_name);
@@ -154,8 +163,8 @@ class Character extends React.Component {
 
         return (
             <React.Fragment>
-                <Grid /* Character Name */>
-                    <Column col={2} offset={2}>
+                <Grid>
+                    <Column col={2} offset={2} /* Book Select */>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
                                 <Select value={book_number} onChange={(e) => this.onChange(e, 'book_number')}>
@@ -173,12 +182,12 @@ class Character extends React.Component {
                             </div>
                         </div>
                     </Column>
-                    <Column col={2} offset={1}>
+                    <Column col={2} offset={1} /* Character Name */>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <h1>{get(data, 'meta.name', '')}</h1>
+                            <Header h={1}>{get(data, 'meta.name', '')}</Header>
                         </div>
                     </Column>
-                    <Column col={2} offset={1}>
+                    <Column col={2} offset={1} /* Chapter Select */>
                         <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ gridRowStart: '2' }}>
                                 <Select value={chapter_number} onChange={(e) => this.onChange(e, 'chapter_number')}>
@@ -191,13 +200,21 @@ class Character extends React.Component {
                 </Grid>
                 <Grid /* Series Title */>
                     <Column col={6} offset={3}>
-                        <h4 style={{ display: 'flex', justifyContent: 'center', marginTop: '0' }}>
-                            {get(data, 'meta.title', '')}
-                        </h4>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0' }}>
+                            <Header h={4} spacing="sm">{get(data, 'meta.title', '')}</Header>
+                        </div>
                     </Column>
                 </Grid>
-                <Grid /* Text content */>
+                <Grid /* Add Notes */>
                     <Column col={6} offset={2}>
+                        <div style={{ marginBottom: '10px' }}>
+                            <Button onClick={() => this.setState({ isAddingNote: true })}>Add Note</Button>
+                        </div>
+                    </Column>
+                </Grid>
+                <Grid>
+                    <Column col={6} offset={2} /* Note area */>
+                        {isAddingNote && <TextArea />}
                         {get(data, 'notes', []).length ? get(data, 'notes', []).map((note) => (
                                 <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
                                     <div>

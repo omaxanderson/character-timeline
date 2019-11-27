@@ -15,9 +15,15 @@ class Home extends React.Component {
             search: '',
         }
     }
+
     onSearch = (value) => {
         this.setState({ page: 'search', search: value });
-    }
+    };
+
+    onCharacterSelect = () => {
+        console.log('nice');
+        this.setState({ page: 'character' });
+    };
 
     render() {
         const { page, search } = this.state;
@@ -37,7 +43,8 @@ class Home extends React.Component {
                         </div>
                     </Column>
                 </Grid>
-                {page === 'character' ? <Character /> : <Search search={search} />}
+
+                {page === 'character' ? <Character /> : <Search onClick={this.onCharacterSelect} search={search} />}
             </React.Fragment>
         )
     }

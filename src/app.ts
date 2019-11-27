@@ -169,24 +169,39 @@ app.get('/api/series/:series_id', async (req, res) => {
 app.get('/api/series', async (req, res) => {
    const { q } = req.query;
    const results = await db.query(
-       `SELECT *
+       db.format(`SELECT *
       FROM series join series_book using (series_id) join book using (book_id) 
-      where series.title = '${q}'`
+      where series.title = ?`, [q])
    );
    res.send(results);
 });
 
 app.get('/api/search', async (req, res) => {
    const { q } = req.query;
-   const sql = db.format(`select characters.name, series.title as series_title, book.title as book_title
-        from characters
-            LEFT JOIN series USING (series_id)
-            LEFT JOIN book USING (book_id)
-        where characters.name = ?`, [q]);
+   const sql = db.format(`select character_id, characters.name, series.title as series_title, book.title as book_title
+      from characters
+         LEFT JOIN series USING (series_id)
+         LEFT JOIN book USING (book_id)
+      where characters.name LIKE ?`, [`%${q}%`]);
+
+   const imageSql = db.format(`
+      select character_id, image_url
+      from characters
+      join character_image using (character_id)
+      where characters.name LIKE ?
+   `, [`%${q}%`]);
    console.log(sql);
-   const results = await db.query(sql);
-   console.log('results', results);
-   res.send(results);
+   const [characters, images]: Array<any> = await Promise.all([
+      db.query(sql),
+      db.query(imageSql),
+   ]);
+
+   const massaged = characters.map(character => ({
+      ...character,
+      images: images.filter(image => image.character_id === character.character_id).map(image => image.image_url),
+   }));
+
+   res.send(massaged);
 });
 
 app.get('/api/notes/:series_id/:book_id/:chapter_number', async (req, res) => {

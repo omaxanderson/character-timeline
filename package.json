@@ -10,8 +10,8 @@
     "create-migration": "ts-node migrations/createMigration.ts"
   },
   "dependencies": {
-    "@omaxwellanderson/react-components": "1.0.2",
-    "@omaxwellanderson/style": "^1.0.0",
+    "@omaxwellanderson/react-components": "1.2.0",
+    "@omaxwellanderson/style": "^1.0.1",
     "@types/node": "^12.12.9",
     "css-loader": "^3.2.0",
     "express": "^4.17.1",

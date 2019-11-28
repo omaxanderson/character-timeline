@@ -2,8 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Character from '../components/Character';
 import Search from '../components/Search';
-import get from 'lodash/get';
-import {Alpha, Beta, Column, Grid, Header, Median, TextInput} from "@omaxwellanderson/react-components";
+import {
+    Alpha,
+    Beta,
+    Column,
+    Grid,
+    Header,
+    Median,
+    TextInput,
+    FloatingButton,
+    Icon,
+} from "@omaxwellanderson/react-components";
 const navy = '#2E486F';
 
 class Home extends React.Component {
@@ -37,7 +46,14 @@ class Home extends React.Component {
                                     <Header h={1} spacing="sm">Spoiler Free Zone</Header>
                                 </Alpha>
                                 <Beta>
-                                    <TextInput onSubmit={this.onSearch} placeholder="Search" />
+                                    <div style={{ display: 'inline-flex' }}>
+                                        <div style={{ marginRight: '20px' }}>
+                                            <FloatingButton size="small">
+                                                <Icon name="add2" size="small" />
+                                            </FloatingButton>
+                                        </div>
+                                        <TextInput onSubmit={this.onSearch} placeholder="Search" />
+                                    </div>
                                 </Beta>
                             </Median>
                         </div>

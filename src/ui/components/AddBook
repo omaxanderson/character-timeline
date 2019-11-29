@@ -1,0 +1,123 @@
+import React from 'react';
+import {
+    Grid,
+    Column,
+    Header,
+    Align,
+    TextInput,
+    Button,
+    Switch,
+    Menu,
+} from '@omaxwellanderson/react-components';
+import debounce from 'lodash/debounce';
+
+class AddBook extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            bookName: '',
+            bookNumber: 0,
+            seriesName: '',
+            selectedSeries: {},
+            isInSeries: true,
+            seriesOptions: [],
+        };
+    }
+
+    searchSeries = async (value) => {
+        const results = await fetch(`/api/series?q=${value}`);
+        const data = await results.json();
+        this.setState({ seriesOptions: data });
+    };
+
+    onValueChange = (name, value) => {
+        if (name === 'seriesName') {
+            this.searchSeries(value);
+        }
+        this.setState({ [name]: value });
+    };
+
+    onSubmit = async () => {
+        const {
+            seriesName,
+            bookName,
+            bookNumber,
+            isInSeries,
+        } = this.state;
+        console.log(seriesName);
+        console.log(bookName);
+        console.log(bookNumber);
+        console.log(isInSeries);
+
+        /*
+        const results = await fetch('/api/book', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                book_name: name,
+                book_number: bookNumber,
+                series_id: seriesId,
+            }),
+        });
+         */
+    };
+
+    onSwitchChange = (value) => {
+        this.setState({ isInSeries: value });
+    }
+
+    render() {
+        const {
+            isInSeries,
+            selectedSeries,
+            seriesOptions,
+        } = this.state;
+        return (
+            <div>
+                <Grid>
+                    <Column col={6} offset={3}>
+                        <Align horizontal>
+                            <Header h={1}>Add Book</Header>
+                        </Align>
+                    </Column>
+                </Grid>
+                <Grid>
+                    <Column col={8} offset={2}>
+                        <Switch default={true} labelOff="Is In Series?" onChange={this.onSwitchChange} />
+                    </Column>
+                </Grid>
+                {isInSeries && (
+                    <Grid>
+                        <Column col={6} offset={2}>
+                            <TextInput
+                                label="Series Name"
+                                onChange={debounce((e, value) => this.onValueChange('seriesName', value), 500)}
+                            />
+                            {selectedSeries.id === undefined && (
+                                <Menu options={seriesOptions.map(opt => opt.title)} />
+                            )}
+                        </Column>
+                        <Column col={2}>
+                            <TextInput label="Book Number" onChange={(e, value) => this.onValueChange('bookNumber', value)}/>
+                        </Column>
+                    </Grid>
+                )}
+                <Grid>
+                    <Column col={8} offset={2}>
+                        <TextInput label="Book Name" onChange={(e, value) => this.onValueChange('bookName', value)}/>
+                    </Column>
+                </Grid>
+                <Grid>
+                    <Column col={8} offset={2}>
+                        <Button onClick={this.onSubmit}>Submit</Button>
+                    </Column>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+export default AddBook;

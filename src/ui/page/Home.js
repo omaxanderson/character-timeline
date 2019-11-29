@@ -4,6 +4,8 @@ import Character from '../components/Character';
 import Search from '../components/Search';
 import Navbar from '../components/Navbar';
 import AddCharacter from '../components/AddCharacter';
+import AddSeries from "../components/AddSeries";
+import AddBook from "../components/AddBook";
 
 class Home extends React.Component {
     constructor(props) {
@@ -36,6 +38,8 @@ class Home extends React.Component {
                 {page === 'character' && <Character />}
                 {page === 'search' && <Search onClick={this.onCharacterSelect} search={search} />}
                 {page === 'addCharacter' && <AddCharacter />}
+                {page === 'addSeries' && <AddSeries />}
+                {page === 'addBook' && <AddBook />}
             </React.Fragment>
         )
     }

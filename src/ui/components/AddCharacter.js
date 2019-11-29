@@ -27,11 +27,6 @@ class AddCharacter extends React.Component {
             bookName,
             isSeries,
         } = this.state;
-        console.log('info');
-        console.log('Character name:', characterName);
-        console.log('Series Name:', seriesName);
-        console.log('Book name:', bookName);
-        console.log('isSeries', isSeries);
         const results = await fetch('/api/character', {
             method: 'POST',
             headers: {
@@ -44,6 +39,8 @@ class AddCharacter extends React.Component {
                 is_series: isSeries,
             }),
         });
+
+        // TODO display an error or success message
     };
 
     onValueChange = (varName, value) => {

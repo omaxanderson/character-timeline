@@ -171,9 +171,9 @@ app.get('/api/series/:series_id', async (req, res) => {
 app.get('/api/series', async (req, res) => {
    const { q } = req.query;
    const results = await db.query(
-       db.format(`SELECT *
-      FROM series join series_book using (series_id) join book using (book_id) 
-      where series.title = ?`, [q])
+       db.format(`SELECT series.series_id, series.title
+      FROM series
+      where series.title LIKE ?`, [`%${q}%`])
    );
    res.send(results);
 });
@@ -280,6 +280,16 @@ app.post('/api/character', bodyParser, async (req, res) => {
       // for now though we're just gonna error out
       res.status(400).send({ message: 'Bad. Can\'t do that yet.' });
    }
+});
+
+app.post('/api/series', bodyParser, async (req, res) => {
+   const { series_name } = req.body;
+   if (!series_name) {
+      res.status(400).send({ message: 'Series name is required!'});
+   }
+   const insertSql = db.format('INSERT INTO series (title) VALUES (?)', [series_name]);
+   const result = await db.query(insertSql);
+   res.send(result);
 });
 
 // Start the server

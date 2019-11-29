@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Column, Median, Alpha, Beta } from '@omaxwellanderson/react-components';
+import { Row, Column, Median, Alpha, Beta } from '@omaxwellanderson/react-components';
 
 class Search extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class Search extends React.Component {
     getCard = (data) => {
         const { name, series_title, images } = data;
         return (
-            <Grid>
+            <Row>
                 <Column col={8} offset={2}>
                     <div onClick={() => this.onClick(name)} style={{ border: '1px solid black' }}>
                         {images.length > 0 && <img height="100px" src={images[0]} alt={`Image of ${name}`} />}
@@ -44,7 +44,7 @@ class Search extends React.Component {
                         <div>{series_title}</div>
                     </div>
                 </Column>
-            </Grid>
+            </Row>
         )
     };
 

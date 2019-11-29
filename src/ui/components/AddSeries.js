@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Grid,
+    Row,
     Column,
     Header,
     Align,
@@ -38,23 +38,23 @@ class AddSeries extends React.Component {
     render() {
         return (
             <div>
-                <Grid>
+                <Row>
                     <Column col={6} offset={3}>
                         <Align horizontal>
                             <Header h={1}>Add Series</Header>
                         </Align>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2}>
                         <TextInput label="Series Name" onChange={this.onSeriesNameChange}/>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2}>
                         <Button onClick={this.onSubmit}>Submit</Button>
                     </Column>
-                </Grid>
+                </Row>
             </div>
         );
     }

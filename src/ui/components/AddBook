@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Grid,
+    Row,
     Column,
     Header,
     Align,
@@ -77,20 +77,20 @@ class AddBook extends React.Component {
         } = this.state;
         return (
             <div>
-                <Grid>
+                <Row>
                     <Column col={6} offset={3}>
                         <Align horizontal>
                             <Header h={1}>Add Book</Header>
                         </Align>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2}>
                         <Switch default={true} labelOff="Is In Series?" onChange={this.onSwitchChange} />
                     </Column>
-                </Grid>
+                </Row>
                 {isInSeries && (
-                    <Grid>
+                    <Row>
                         <Column col={6} offset={2}>
                             <TextInput
                                 label="Series Name"
@@ -103,18 +103,18 @@ class AddBook extends React.Component {
                         <Column col={2}>
                             <TextInput label="Book Number" onChange={(e, value) => this.onValueChange('bookNumber', value)}/>
                         </Column>
-                    </Grid>
+                    </Row>
                 )}
-                <Grid>
+                <Row>
                     <Column col={8} offset={2}>
                         <TextInput label="Book Name" onChange={(e, value) => this.onValueChange('bookName', value)}/>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2}>
                         <Button onClick={this.onSubmit}>Submit</Button>
                     </Column>
-                </Grid>
+                </Row>
             </div>
         );
     }

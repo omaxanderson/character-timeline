@@ -5,7 +5,7 @@ import {
     Beta,
     Column,
     FloatingButton,
-    Grid,
+    Row,
     Header,
     Icon,
     Median,
@@ -37,12 +37,12 @@ class Navbar extends React.Component {
     render() {
         const { onSearch } = this.props;
         return (
-            <Grid /* Navbar */>
+            <Row spacing="md"/* Navbar */>
                 <Column col={12}>
                     <div style={{ color: 'white', paddingLeft: '16px', paddingRight: '16px', backgroundColor: navy }}>
                         <Median spacing="none" verticalAlign>
                             <Alpha>
-                                <Header h={1} spacing="sm">Spoiler Free Zone</Header>
+                                <Header h={1} spacing="md">Spoiler Free Zone</Header>
                             </Alpha>
                             <Beta>
                                 <div style={{ display: 'inline-flex' }}>
@@ -67,7 +67,7 @@ class Navbar extends React.Component {
                         </Median>
                     </div>
                 </Column>
-            </Grid>
+            </Row>
         )
     }
 }

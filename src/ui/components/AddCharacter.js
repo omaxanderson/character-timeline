@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Button,
     Column,
-    Grid,
+    Row,
     Header,
     TextInput,
     Switch,
@@ -58,7 +58,7 @@ class AddCharacter extends React.Component {
         const rowStyles = { marginBottom: '20px' };
         return (
             <div>
-                <Grid>
+                <Row>
                     <Column col={4} offset={4} >
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <Header h={1}>
@@ -66,13 +66,13 @@ class AddCharacter extends React.Component {
                             </Header>
                         </div>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2} style={{ ...rowStyles, ...{ display: 'flex', alignItems: 'center', transform: 'translateY(7px)' }}}>
                         <Switch default={isSeries} onChange={this.onSwitch} labelOn="Series" labelOff="Book" />
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={isSeries ? 4 : 8} offset={2} style={rowStyles}>
                         <TextInput
                             label={label}
@@ -87,22 +87,22 @@ class AddCharacter extends React.Component {
                             />
                         </Column>
                     )}
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={4} offset={2} style={rowStyles}>
                         <TextInput
                             label="Name"
                             onChange={(e, value) => this.onValueChange('characterName', value)}
                         />
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={8} offset={2} style={rowStyles}>
                         <div style={{ marginTop: '15px' }}>
                             <Button onClick={this.onSubmit}>Submit</Button>
                         </div>
                     </Column>
-                </Grid>
+                </Row>
             </div>
         );
     }

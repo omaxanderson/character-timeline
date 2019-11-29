@@ -2,7 +2,7 @@ import React from 'react';
 import get from 'lodash/get';
 import {
     Select,
-    Grid,
+    Row,
     Column,
     Median,
     Alpha,
@@ -153,7 +153,7 @@ class Character extends React.Component {
             console.error('what the fuck man');
             return null;
         }
-        const results = await fetch('/note', {
+        const results = await fetch('/api/note', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -197,10 +197,10 @@ class Character extends React.Component {
 
         return (
             <React.Fragment>
-                <Grid>
+                <Row>
                     <Column col={2} offset={2} /* Book Select */>
-                        <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
-                            <div style={{ gridRowStart: '2' }}>
+                        <div style={{ display: 'Row', RowTemplateRows: '1fr 2fr 1fr' }}>
+                            <div style={{ RowRowStart: '2' }}>
                                 <Select value={book_number} onChange={(e) => this.onChange(e, 'book_number')}>
                                     <option>Book</option>
                                     {books.map(book => (
@@ -218,12 +218,12 @@ class Character extends React.Component {
                     </Column>
                     <Column col={2} offset={1} /* Character Name */>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Header h={1}>{get(data, 'meta.name', '')}</Header>
+                            <Header h={1} noSpacing>{get(data, 'meta.name', '')}</Header>
                         </div>
                     </Column>
                     <Column col={2} offset={1} /* Chapter Select */>
-                        <div style={{ display: 'grid', gridTemplateRows: '1fr 2fr 1fr' }}>
-                            <div style={{ gridRowStart: '2' }}>
+                        <div style={{ display: 'Row', RowTemplateRows: '1fr 2fr 1fr' }}>
+                            <div style={{ RowRowStart: '2' }}>
                                 <Select value={chapter_number} onChange={(e) => this.onChange(e, 'chapter_number')}>
                                     <option>Chapter</option>
                                     {chapters}
@@ -231,22 +231,22 @@ class Character extends React.Component {
                             </div>
                         </div>
                     </Column>
-                </Grid>
-                <Grid /* Series Title */>
+                </Row>
+                <Row /* Series Title */>
                     <Column col={6} offset={3}>
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0' }}>
                             <Header h={4} spacing="sm">{get(data, 'meta.title', '')}</Header>
                         </div>
                     </Column>
-                </Grid>
-                <Grid /* Add Notes */>
+                </Row>
+                <Row /* Add Notes */>
                     <Column col={6} offset={2}>
                         <div style={{ marginBottom: '10px' }}>
                             <Button onClick={() => this.setState({ isAddingNote: !this.state.isAddingNote })}>Add Note</Button>
                         </div>
                     </Column>
-                </Grid>
-                <Grid>
+                </Row>
+                <Row>
                     <Column col={6} offset={2} /* Note area */>
                         {isAddingNote && (
                             <React.Fragment>
@@ -281,7 +281,7 @@ class Character extends React.Component {
                             <div>Age: 17</div>
                         </div>
                     </Column>
-                </Grid>
+                </Row>
             </React.Fragment>
         );
     }

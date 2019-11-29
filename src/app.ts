@@ -221,7 +221,7 @@ app.post('/note', bodyParser, async (req, res) => {
    const {
       character_id,
       series_id,
-       book_number,
+      book_number,
       chapter_number,
       content,
    } = req.body;
@@ -240,6 +240,46 @@ app.post('/note', bodyParser, async (req, res) => {
 
    console.log(JSON.stringify(req.body, null, 2));
    res.send(result);
+});
+
+app.post('/api/character', bodyParser, async (req, res) => {
+   const {
+       character_name,
+       series_name,
+       book_name,
+       book_number,
+       is_series,
+   } = req.body;
+
+   if (!character_name || (!series_name && !book_name)) {
+      const missing = [];
+      character_name === undefined && missing.push('character name');
+      series_name === undefined && missing.push('series name');
+      book_name === undefined && missing.push('book name');
+      res.status(400).send({ message: `Missing ${missing.join(', ')}` });
+   }
+
+   if (is_series) {
+      // get series id first
+      const { series_id } = (await db.fetchOne(
+          db.format('SELECT series_id FROM series WHERE title = ?', [series_name]
+          ))) || {};
+
+      if (!series_id) {
+         return res.status(404).send({ success: false, message: `No series found for ${series_name}.`});
+      }
+
+      const book_id = null;
+
+      const insertSql = db.format('INSERT INTO characters (name, series_id, book_id) ' +
+          'VALUES (?, ?, ?);', [character_name, series_id, book_id]);
+      const insertResult = await db.query(insertSql);
+      res.send(insertResult);
+   } else {
+      // get book info and stuff
+      // for now though we're just gonna error out
+      res.status(400).send({ message: 'Bad. Can\'t do that yet.' });
+   }
 });
 
 // Start the server

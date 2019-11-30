@@ -7,12 +7,12 @@ const Note = (props) => {
     } = props;
 
     return (
-        <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
+        <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #CCCCCC', marginBottom: '20px' }}>
             <Median spacing="none">
                 <Alpha>{note.book_id}.{note.chapter_number}</Alpha>
                 <Beta>{note.book_title} - <span style={{ color: '#777' }}>{note.chapter_title}</span></Beta>
             </Median>
-            <p>{note.content}</p>
+            <p style={{ marginBottom: '0px'}}>{note.content}</p>
         </div>
     );
 };

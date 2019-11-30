@@ -14,6 +14,7 @@ import {
 } from '@omaxwellanderson/react-components';
 import '@omaxwellanderson/react-components/dist/main.css';
 import '@omaxwellanderson/style/dist/main.css';
+import Note from './Note';
 
 // color palette
 // navy 2e486f
@@ -172,6 +173,34 @@ class Character extends React.Component {
         this.getCharacterData();
     };
 
+    getNotes = () => {
+        const { data, book_number, chapter_number, series_info } = this.state;
+        const book = series_info.find(book => book.book_number === book_number);
+        const current_chapter = get(book, 'chapters', [])
+            .find(chapter => chapter.chapter_number === chapter_number);
+
+        const notes = get(data, 'notes', []);
+
+        if (!notes.length) {
+            if (!current_chapter) {
+                return null;
+            }
+            const name = get(data, 'meta.name', 'this character');
+            return (
+                <div>
+                    There are no notes for {name} in {current_chapter.chapter_name} yet!
+                    Go ahead and add some notes to help yourself and fellow readers out.
+                </div>
+            )
+        }
+
+        return (
+            <React.Fragment>
+                {notes.map(note => <Note key={note.note_id} note={note} />)}
+            </React.Fragment>
+        );
+    };
+
     render() {
         const {
             data,
@@ -195,6 +224,10 @@ class Character extends React.Component {
                 </option>
             ));
 
+        const notes = this.getNotes();
+        console.log('notes 2', notes);
+
+        console.warn('wtf');
         return (
             <React.Fragment>
                 <Row>
@@ -254,22 +287,7 @@ class Character extends React.Component {
                                 <Button onClick={this.onNoteAdd}>Submit</Button>
                             </React.Fragment>
                         )}
-                        {get(data, 'notes', []).length ? get(data, 'notes', []).map((note) => (
-                                <div key={`note_${note.note_id}`} style={{ padding: '10px', border: '1px solid #777777', marginBottom: '20px' }}>
-                                    <div>
-                                        Book: {note.book_id}
-                                    </div>
-                                    <div>
-                                        Chapter: {note.chapter_number}
-                                    </div>
-                                    <p>{note.content}</p>
-                                </div>
-                            )) :
-                            <div>
-                                There are no notes for {get(data, 'meta.name', 'this character')} in {chapter_name} yet!
-                                Go ahead and add some notes to help yourself and fellow readers out.
-                            </div>
-                        }
+                        {notes}
                     </Column>
                     <Column col={2}>
                         <div style={{ padding: '10px', border: '1px solid black' }}>

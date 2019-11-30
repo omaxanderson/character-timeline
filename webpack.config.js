@@ -27,7 +27,8 @@ module.exports = {
                      "@babel/plugin-syntax-object-rest-spread",
                      "@babel/plugin-proposal-class-properties",
                      "@babel/plugin-syntax-dynamic-import",
-                     "babel-plugin-dynamic-import-node"
+                     "babel-plugin-dynamic-import-node",
+                     "@babel/plugin-proposal-optional-chaining"
                   ],
                },
             },

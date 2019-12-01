@@ -24,12 +24,33 @@ app.get('/:series_id', async (req: Request, res: Response) => {
 
 // Get a series by title
 app.get('/', async (req: Request, res: Response) => {
-    const { q } = req.query;
-    const results = await db.query(
+    const { q, columns } = req.query;
+    const results: any = await db.query(
         db.format(`SELECT series.series_id, series.title
       FROM series
       where series.title LIKE ?`, [`%${q}%`])
     );
+    // for each result, get book info
+    if (columns && columns.split(',').includes('books')) {
+        const withBooks = results.map(async (series) => {
+            const sql = db.format(
+                `select book.book_id, title, book_number
+                from series_book
+                    join book using (book_id)
+                where series_id = ?`,
+                [series.series_id],
+            );
+            const data = await db.query(sql);
+            return {
+                ...series,
+                books: data,
+            };
+        });
+
+        const all = await Promise.all(withBooks);
+
+        return res.send(all);
+    }
     res.send(results);
 });
 

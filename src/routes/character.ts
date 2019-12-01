@@ -11,7 +11,7 @@ const app = express.Router();
 
 app.get('/:character_name', async (req: Request, res: Response) => {
     const { character_name } = req.params;
-    const { book_number, book_id, chapter_number } = req.query;
+    const { book_number, chapter_number } = req.query;
     const [meta, attributes, notes] = await getCharacterData({ character_name, book_number, chapter_number });
     const formatted = {
         meta,
@@ -74,8 +74,9 @@ app.post('/', bodyParser, async (req: Request, res: Response) => {
     if (is_series) {
         // get series id first
         const { series_id } = (await db.fetchOne(
-            db.format('SELECT series_id FROM series WHERE title = ?', [series_name]
-            ))) || {};
+            'SELECT series_id FROM series WHERE title = ?',
+            [series_name],
+        )) || {};
 
         if (!series_id) {
             return res.status(404).send({ success: false, message: `No series found for ${series_name}.`});

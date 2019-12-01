@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import AddCharacter from '../components/AddCharacter';
 import AddSeries from "../components/AddSeries";
 import AddBook from "../components/AddBook";
+import AddChapter from "../components/AddChapter";
 
 class Home extends React.Component {
     constructor(props) {
@@ -40,6 +41,7 @@ class Home extends React.Component {
                 {page === 'addCharacter' && <AddCharacter />}
                 {page === 'addSeries' && <AddSeries />}
                 {page === 'addBook' && <AddBook />}
+                {page === 'addChapter' && <AddChapter />}
             </React.Fragment>
         )
     }

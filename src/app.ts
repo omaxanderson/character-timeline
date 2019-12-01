@@ -6,6 +6,7 @@ import characterRoutes from './routes/character';
 import seriesRoutes from './routes/series';
 import noteRoutes from './routes/note';
 import searchRoutes from './routes/search';
+import chapterRoutes from './routes/chapter';
 import db from './database/db';
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/series', seriesRoutes);
 app.use('/api/character', characterRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/note', noteRoutes);
+app.use('/api/chapter', chapterRoutes);
 
 
 // Start the server

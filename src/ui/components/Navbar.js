@@ -19,19 +19,6 @@ class Navbar extends React.Component {
     onAddClick = (selection) => {
         const { onAddClick } = this.props;
         onAddClick(selection);
-        switch (selection) {
-            case 'Character':
-                console.log('adding a new character');
-                break;
-            case 'Book':
-                console.log('adding a new book');
-                break;
-            case 'Series':
-                console.log('adding a new Series');
-                break;
-            default:
-                console.log('invalid selection');
-        }
     };
 
     render() {
@@ -56,6 +43,7 @@ class Navbar extends React.Component {
                                                     'Character',
                                                     'Book',
                                                     'Series',
+                                                    'Chapter',
                                                 ]}
                                                  onClick={this.onAddClick}
                                             />

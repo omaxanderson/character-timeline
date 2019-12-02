@@ -13,6 +13,8 @@ import {
     Popover,
     Menu,
 } from "@omaxwellanderson/react-components";
+import '@omaxwellanderson/react-components/dist/main.css';
+import '@omaxwellanderson/style/dist/main.css';
 const navy = '#2E486F';
 
 class Navbar extends React.Component {

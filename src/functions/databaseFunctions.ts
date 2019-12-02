@@ -191,7 +191,7 @@ export const getCharacterDataById = async (character_id) => {
    `, [character_id]);
 
     const [ data, images ] = await Promise.all([
-        db.select(metaSql),
+        db.fetchOne(metaSql),
         getCharacterImagesById(character_id),
     ]);
 

@@ -8,4 +8,8 @@ app.get('/:character_name', (req, res) => {
     res.render('test', { character });
 });
 
+app.get('/series/add', (req, res) => {
+    res.render('AddSeries');
+});
+
 export default app;

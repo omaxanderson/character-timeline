@@ -234,12 +234,14 @@ class Character extends React.Component {
                     <Column col={2} offset={2} /* Book Select */>
                         <div style={{ display: 'Row', RowTemplateRows: '1fr 2fr 1fr' }}>
                             <div style={{ RowRowStart: '2' }}>
-                                <Select value={book_number} onChange={(e) => this.onChange(e, 'book_number')}>
+                                <Select
+                                    value={book_number}
+                                    onChange={(e) => this.onChange(e, 'book_number')}
+                                >
                                     <option>Book</option>
                                     {books.map(book => (
                                         <option
                                             value={book.book_number}
-                                            selected={book.book_number === book_number}
                                             key={`book_${book.book_number}`}
                                         >
                                             {book.book_number} - {book.book_title}
@@ -275,7 +277,9 @@ class Character extends React.Component {
                 <Row /* Add Notes */>
                     <Column col={6} offset={2}>
                         <div style={{ marginBottom: '10px' }}>
-                            <Button onClick={() => this.setState({ isAddingNote: !this.state.isAddingNote })}>Add Note</Button>
+                            <Button onClick={() => this.setState({ isAddingNote: !this.state.isAddingNote })}>
+                                {isAddingNote ? 'Cancel' : 'Add Note'}
+                            </Button>
                         </div>
                     </Column>
                 </Row>
@@ -284,19 +288,19 @@ class Character extends React.Component {
                         {isAddingNote && (
                             <React.Fragment>
                                 <TextArea ref={this.noteAddRef}/>
-                                <Button onClick={this.onNoteAdd}>Submit</Button>
+                                <div style={{ marginTop: '8px', marginBottom: '16px' }}>
+                                    <Button onClick={this.onNoteAdd}>Submit</Button>
+                                </div>
                             </React.Fragment>
                         )}
                         {notes}
                     </Column>
                     <Column col={2}>
-                        <div style={{ padding: '10px', border: '1px solid black' }}>
+                        <div style={{ padding: '10px', border: '1px solid #CCCCCC' }}>
                             <img
-                                src={get(data, 'meta.image_url', '')}
+                                src={get(data, 'meta.images.0', '')}
                                 width="100%"
                             />
-                            <div>Location: Emond's Field</div>
-                            <div>Age: 17</div>
                         </div>
                     </Column>
                 </Row>

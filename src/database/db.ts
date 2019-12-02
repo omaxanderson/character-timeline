@@ -44,12 +44,6 @@ export const databaseFactory = () => {
 };
 
 export default class Db {
-   static getConnection(config: Config): Connection {
-      const connection: Connection = mysql.createConnection(config);
-      connection.connect();
-      return connection;
-   }
-
    static async select(sql: string, params: (string | number)[] = []): Promise<SelectResult> {
        const db = databaseFactory();
        try {
@@ -73,21 +67,6 @@ export default class Db {
       } catch (err) {
          throw new Error(err);
       }
-      /*
-     const connection = Db.getConnection(config);
-
-     const formatted: string = params.length ? Db.format(sql, params) : sql;
-
-     try {
-        const results: Query = await connection.query(formatted);
-        connection.end();
-        return results;
-     } catch (err) {
-        connection.end();
-        throw new Error(err);
-     }
-
-       */
    }
 
    /**
@@ -124,20 +103,4 @@ export default class Db {
       const result = await this.select(sql, params);
       return result[0];
    }
-
-   /* Insert a row into the database
-    *
-    * @param table String
-    * @param values Object - contains the key-value pairs that are to be inserted
-    * @param ignore Boolean - whether or not to INSERT IGNORE
-    */
-   /*
-   static insert(table, values, ignore = false): Promise<SelectResult | InsertResult | DatabaseError> {
-      const columns = Db.format(Object.keys(values).filter(key => values[key]).join(', '));
-      const columnString = Object.values(values).filter(val => val).map(() => '?');
-      const data = Object.values(values).filter(val => val);
-      const sql = Db.format(`INSERT ${ignore ? 'IGNORE ' : ''}INTO ${table} (${columns}) VALUES (${columnString})`, data);
-      return this.query(sql);
-   }
-    */
 }

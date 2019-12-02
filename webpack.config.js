@@ -10,7 +10,7 @@ const entries = () => {
    });
 
    return entries;
-}
+};
 
 module.exports = {
    mode: 'development',

@@ -22,6 +22,8 @@ class AddChapter extends React.Component {
             seriesOptions: [],
             selectedSeries: {},
             book: {},
+            errorMessage: '',
+            successMessage: '',
         };
     }
 
@@ -36,20 +38,25 @@ class AddChapter extends React.Component {
         console.log('chapterName', chapterName);
         console.log('chapterNumber', chapterNumber);
         console.log('book', book);
-        /*
-        const results = await fetch('/api/character', {
+        const results = await fetch('/api/chapter', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: JSON.stringify({
-                series_name: seriesName,
+                book_id: book.book_id,
+                chapter_name: chapterName,
+                chapter_number: chapterNumber,
             }),
         });
-         */
 
         // TODO display an error or success message
+        if (results.status !== 200) {
+            const data = await results.json();
+            this.setState({ errorMessage: data.message });
+        } else {
+            this.setState({ successMessage: 'Chapter creation successful'});
+        }
     };
 
     searchSeries = async (value) => {
@@ -58,7 +65,7 @@ class AddChapter extends React.Component {
         this.setState({ seriesOptions: data });
     };
 
-    debouncedSearch = debounce(this.searchSeries, 500);
+    debouncedSearch = debounce(this.searchSeries, 300);
 
     onValueChange = (name, value) => {
         if (name === 'seriesName') {
@@ -92,6 +99,8 @@ class AddChapter extends React.Component {
             selectedSeries,
             seriesName,
             chapterNumber,
+            errorMessage,
+            successMessage,
         } = this.state;
         const series = seriesOptions.find(s => s.title === selectedSeries.title);
         const rowStyles = { marginBottom: '20px' };
@@ -156,6 +165,12 @@ class AddChapter extends React.Component {
                         <div style={{ marginTop: '15px' }}>
                             <Button onClick={this.onSubmit}>Submit</Button>
                         </div>
+                    </Column>
+                </Row>
+                <Row>
+                    <Column col={8} offset={2}>
+                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                     </Column>
                 </Row>
             </div>
